@@ -1,0 +1,79 @@
+Designator Footprint          Mid X         Mid Y         Ref X         Ref Y         Pad X         Pad Y TB      Rotation Comment   
+
+IC2        SOT-223      1565.484mil   2145.072mil       1565mil       2145mil   1475.484mil   2025.072mil  T        360.00 MCP1754ST-5002E/DB
+R54        1206          2752.76mil   2349.992mil       2685mil       2350mil    2685.26mil   2349.992mil  T          0.00 3k3       
+T11        SOT-23           3890mil   1284.999mil       3890mil       1285mil       3850mil     1322.5mil  T        270.00 PDTC114YT 
+R13        0805             3930mil       1095mil       3930mil       1095mil       3930mil   1144.213mil  T        270.00 4k7       
+K3         PKS5             1525mil       3230mil       1925mil       3230mil       1925mil       3230mil  T        180.00 691 253 510 002 & 003
+Rel.1      FI4032           3500mil       3015mil       3500mil       3015mil   3647.638mil   2522.874mil  T         90.00 FINDER-4032
+K6         TC2030           1625mil       1365mil       1625mil       1365mil       1600mil       1415mil  T        270.00 PIC PROGRAM
+K5         TC2030           2755mil       1365mil       2755mil       1365mil       2730mil       1415mil  T        270.00 PIC PROGRAM
+T46        SOT-23           3670mil   1475.001mil       3670mil       1475mil       3710mil     1437.5mil  T         90.00 BC847     
+T45        SOT-23           3210mil   2209.999mil       3210mil       2210mil       3170mil     2247.5mil  T        270.00 PDTC114YT 
+T44        SOT-23           3210mil   2069.999mil       3210mil       2070mil       3170mil     2107.5mil  T        270.00 PDTC114YT 
+T43        SOT-23           3210mil   1929.999mil       3210mil       1930mil       3170mil     1967.5mil  T        270.00 PDTC114YT 
+T42        SOT-23           3210mil   1784.999mil       3210mil       1785mil       3170mil     1822.5mil  T        270.00 PDTC114YT 
+T41        SOT-23           3210mil   2349.999mil       3210mil       2350mil       3170mil     2387.5mil  T        270.00 PDTC114YT 
+T25        SOT-23           2540mil   1480.001mil       2540mil       1480mil       2580mil     1442.5mil  T         90.00 BC847     
+T24        SOT-23           2080mil   2209.999mil       2080mil       2210mil       2040mil     2247.5mil  T        270.00 PDTC114YT 
+T23        SOT-23           2080mil   2064.999mil       2080mil       2065mil       2040mil     2102.5mil  T        270.00 PDTC114YT 
+T22        SOT-23           2080mil   1919.999mil       2080mil       1920mil       2040mil     1957.5mil  T        270.00 PDTC114YT 
+T21        SOT-23           2080mil   1779.999mil       2080mil       1780mil       2040mil     1817.5mil  T        270.00 PDTC114YT 
+R53        1206         3760.008mil    1112.76mil       3760mil       1045mil   3760.008mil    1045.26mil  T         90.00 1k5       
+R52        0805             3640mil       1285mil       3640mil       1285mil       3640mil   1235.787mil  T         90.00 4k7       
+R51        0805             3540mil       1095mil       3540mil       1095mil       3540mil   1045.787mil  T         90.00 47k       
+R50        0805             3440mil       1095mil       3440mil       1095mil       3440mil   1045.787mil  T         90.00 12k       
+R49        0805             3440mil       1695mil       3440mil       1695mil   3489.213mil       1695mil  T        180.00 4k7       
+R48        0805             3390mil       2210mil       3390mil       2210mil   3340.787mil       2210mil  T          0.00 2k        
+R47        0805             3390mil       2070mil       3390mil       2070mil   3340.787mil       2070mil  T          0.00 680E      
+R46        0805             3390mil       1930mil       3390mil       1930mil   3340.787mil       1930mil  T          0.00 470E      
+R45        0805             3390mil       1780mil       3390mil       1780mil   3340.787mil       1780mil  T          0.00 220E      
+R44        0805             3580mil       2000mil       3580mil       2000mil   3530.787mil       2000mil  T          0.00 4k7       
+R43        0805             2740mil       1095mil       2740mil       1095mil       2740mil   1144.213mil  T        270.00 4k7       
+R42        0805             3190mil       1095mil       3190mil       1095mil       3190mil   1144.213mil  T        270.00 4k7       
+R41        0805             3290mil       1095mil       3290mil       1095mil       3290mil   1144.213mil  T        270.00 4k7       
+R34        1206         2625.008mil    1112.76mil       2625mil       1045mil   2625.008mil    1045.26mil  T         90.00 1k5       
+R33        0805             2510mil       1285mil       2510mil       1285mil       2510mil   1235.787mil  T         90.00 4k7       
+R32        0805             2410mil       1095mil       2410mil       1095mil       2410mil   1045.787mil  T         90.00 47k       
+R31        0805             2310mil       1095mil       2310mil       1095mil       2310mil   1045.787mil  T         90.00 12k       
+R30        0805             2310mil       1695mil       2310mil       1695mil   2359.213mil       1695mil  T        180.00 4k7       
+R29        0805             2260mil       2210mil       2260mil       2210mil   2210.787mil       2210mil  T          0.00 910E      
+R28        0805             2260mil       2065mil       2260mil       2065mil   2210.787mil       2065mil  T          0.00 750E      
+R27        0805             2260mil       1920mil       2260mil       1920mil   2210.787mil       1920mil  T          0.00 620E      
+R26        0805             2260mil       1780mil       2260mil       1780mil   2210.787mil       1780mil  T          0.00 510E      
+R25        0805             2450mil       1990mil       2450mil       1990mil   2400.787mil       1990mil  T        360.00 11k5      
+R24        0805             1500mil       1095mil       1500mil       1095mil       1500mil   1144.213mil  T        270.00 4k7       
+R23        0805             2105mil       1095mil       2105mil       1095mil       2105mil   1144.213mil  T        270.00 4k7       
+R21        0805             2020mil       1095mil       2020mil       1095mil       2020mil   1144.213mil  T        270.00 4k7       
+R12        0805             4015mil       1095mil       4015mil       1095mil       4015mil   1144.213mil  T        270.00 22k       
+IC42       SOIC8        3465.091mil   1479.813mil       3465mil       1480mil   3540.091mil   1586.112mil  T        270.00 LM358     
+IC41       SOIC18           3090mil       1455mil       3290mil       1635mil       3290mil       1635mil  T        270.00 PIC16F1826
+IC22       SOIC8        2335.091mil   1479.813mil       2335mil       1480mil   2410.091mil   1586.112mil  T        270.00 LM358     
+IC21       SOIC18           1955mil       1455mil       2155mil       1635mil       2155mil       1635mil  T        270.00 PIC16F1826
+D42        SOT-23       3650.001mil       2305mil       3650mil       2305mil     3612.5mil       2265mil  T        360.00 BAV70     
+D41        SMB              3630mil       1855mil       3630mil       1855mil   3549.291mil       1855mil  T        180.00 ES1B      
+D21        SMB          2499.213mil       1840mil   2499.213mil       1840mil   2418.504mil       1840mil  T        180.00 ES1B      
+C43        0805             3640mil       1095mil       3640mil       1095mil       3640mil   1144.213mil  T        270.00 10nF      
+C42        0805             3680mil       1695mil       3680mil       1695mil   3729.213mil       1695mil  T        180.00 100n      
+C41        0805             3090mil       1095mil       3090mil       1095mil       3090mil   1144.213mil  T        270.00 100n      
+C23        0805             2510mil       1095mil       2510mil       1095mil       2510mil   1144.213mil  T        270.00 10nF      
+C22        0805             2550mil       1695mil       2550mil       1695mil   2599.213mil       1695mil  T        180.00 100n      
+C21        0805             1920mil       1095mil       1920mil       1095mil       1920mil   1144.213mil  T        270.00 100n      
+Z1         ST-ZEK           1715mil        635mil       1715mil        635mil       1815mil        775mil  T        360.00 ZEKERING  
+IC5        SOP4             4265mil       1745mil       4265mil       1745mil       4315mil   1872.953mil  T        270.00 VOM617A   
+D12        SMB              4200mil       2085mil       4200mil       2085mil       4200mil   2165.709mil  T         90.00 ES1B      
+K7         MINI-PKS8        2815mil        340mil       2815mil        340mil       2290mil        340mil  T        360.00 691 243 310 008
+K2         PKS4             2840mil       3230mil       2840mil       3230mil       2540mil       3230mil  T          0.00 691 253 510 002
+K1         PKS3             1080mil        975mil       1080mil       1175mil       1080mil       1175mil  T        270.00 691 253 510 003
+T47        SOT-23       3800.001mil       2310mil       3800mil       2310mil     3762.5mil       2270mil  T        360.00 PDTC114YT 
+R11        R-300V           4500mil       2045mil       4500mil       2045mil       4500mil   1749.724mil  T         90.00 220k      
+R22        0805             2190mil       1095mil       2190mil       1095mil       2190mil   1144.213mil  T        270.00 4k7       
+D11        SMB              4330mil       2085mil       4330mil       2085mil       4330mil   2004.291mil  T        270.00 ES1B      
+C14        WCAP-6.3         4015mil       1505mil       4015mil       1505mil       4015mil   1394.764mil  T        270.00 10uF      
+C13        WCAP-6.3         1565mil       1770mil       1565mil       1770mil       1565mil   1659.764mil  T        270.00 10uF      
+C11        0805             1790mil       2350mil       1790mil       2350mil       1790mil   2399.213mil  T        270.00 100n      
+LOGO1      REMOPA LOGO MIDDEL     -51759mil     -53485mil       4115mil        425mil     -51759mil     -53485mil  T          0.00 REMOPA LOGO MIDDEL
+IC1        TMPM-02-12      702.5mil       1765mil        135mil       1765mil        150mil       1470mil  T        360.00 IRM-02-12 
+C12        WCAP-6.3         2800mil       1865mil       2800mil       1865mil       2800mil   1975.236mil  T         90.00 10uF      
+K4         PKS3             4440mil       3230mil       4240mil       3230mil       4240mil       3230mil  T          0.00 691 253 510 003
+
