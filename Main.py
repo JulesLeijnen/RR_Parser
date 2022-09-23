@@ -1,5 +1,11 @@
 import re
 import logging
+import pandas as pd
+
+#TODO:
+#   Tkinter front
+#   Fix splitting issue in txttoarray
+#   Pandas array
 
 #-------------------------------Imports-------------------------------
 #-------------------------------GlobalVars----------------------------
@@ -26,7 +32,8 @@ def loggingSetup(): #Setup needed logging settings
 
 def main():
     mode = selectMode()                                                                         #Selects what mode to use (most likely will be what manifacturer)
-
+    DataArray = txtToArray("Source\PickPlaceforBasismodule.txt", mode)
+    # print(arrayToPandasDF(DataArray, mode))
     return
 
 #-------------------------------Main----------------------------------
@@ -52,7 +59,7 @@ def fromMiltoMM(Mil):
 def fromMMtoMil(MM):
     return MM*39.3700787
 
-def txtToArray(textfilePath):
+def txtToArray(textfilePath, mode):
     ReturnArray = []
     f = open(textfilePath, "r")
 
@@ -72,7 +79,25 @@ def txtToArray(textfilePath):
     while [] in ReturnArray:                                                                    #remove unneeded additions to array
         ReturnArray.remove([])
 
+    if mode == "DE":
+        for i in ReturnArray[1:]:
+            hold = i[-1]
+            i.remove(hold)
+            holdnew = re.split(r"[0-9]\.[0-9][0-9] ", hold, maxsplit=1)
+            print(holdnew)
+            print(hold)
     return ReturnArray
+
+def arrayToPandasDF(DataArray, mode):
+    headers = DataArray[0]
+    data = DataArray[1:]
+
+    if mode == "DE":
+        headers = ["Designator", "Footprint", "Mid X", "Mid Y", "Ref X", "Ref Y", "Pad X", "Pad Y", "TB", "Rotation", "Comment"]
+
+    DF = pd.DataFrame(data, columns = headers)
+    return DF
+
 
 #-------------------------------SeconderyFunctions--------------------
 #-------------------------------__Main__------------------------------
