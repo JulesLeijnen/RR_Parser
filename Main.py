@@ -1,5 +1,8 @@
 import re
 import logging
+from statistics import mode
+from tkinter.tix import Form
+from typing import Type
 import pandas as pd
 
 #TODO:
@@ -33,13 +36,20 @@ def loggingSetup(): #Setup needed logging settings
 def main():
     mode = selectMode()                                                                         #Selects what mode to use (most likely will be what manifacturer)
     DataArray = txtToArray("Source\PickPlaceforBasismodule.txt", mode)
-    # print(arrayToPandasDF(DataArray, mode))
+    DataFrame = arrayToPandasDF(DataArray, mode)
+    if DEBUGMODE:
+        DataFrame.to_excel(r'test.xlsx', index = False)
+    for i in range(0, len(DataFrame.index)):
+        namej = createComponentName(DataFrame.iloc[i, 0], DataFrame.iloc[i,1].strip(), DataFrame.iloc[i, 10].strip(), mode)
+        print(namej)
+    
     return
 
 #-------------------------------Main----------------------------------
 #-------------------------------SeconderyFunctions--------------------
 
 def selectMode():
+    return "DE"
     inputModeCorrect = False
     while not inputModeCorrect:
         inputMode = input("Select the mode you need (DE/AA/AB/AC/AD)").upper()
@@ -60,10 +70,84 @@ def fromMMtoMil(MM):
     return MM*39.3700787
 
 def txtToArray(textfilePath, mode):
-    ReturnArray = []
     f = open(textfilePath, "r")
+    ReturnArray = txtToArray_BOILERPLATE(f.read())
 
-    FRead = f.read().replace("\n", "|").replace("\r", "|")                                      #Replace every newline with a "|" to be split there
+    if mode == "DE":
+        for i in ReturnArray[1:]:
+            hold = i[-1]
+            i.remove(hold)
+            holdnew = re.split(r"([0-9].00 )", hold, maxsplit=1)
+            holdnew[1] = holdnew[0] + holdnew[1]
+            del holdnew[0]
+            #print(holdnew)
+            #print(hold)
+            for j in holdnew:
+                i.append(j)
+
+    return ReturnArray
+
+
+
+def arrayToPandasDF(DataArray, mode):
+    headers = DataArray[0]
+    data = DataArray[1:]
+
+    if mode == "DE":
+        headers = ["Designator", "Footprint", "Mid X", "Mid Y", "Ref X", "Ref Y", "Pad X", "Pad Y", "TB", "Rotation", "Comment"]
+
+    DF = pd.DataFrame(data, columns = headers)
+    return DF
+
+def createComponentName(TypeComponent, FormFactor, Comment, Mode):
+    componentname = "UNKNOWN_ERROR_CHECK-PROGRAM"
+
+    if Mode == "DE":
+        ComponentIdentifier = (re.sub(r"[^a-zA-Z]", "", TypeComponent)).upper()
+
+        matchups = {"C": "Capacitor",
+                    "D": "Diode",
+                    "IC": "IC",
+                    "R": "Resistor",
+                    "T": "Transistor",
+                    "REL": "Relay",
+                    "K": "Relay"}
+        if ComponentIdentifier in matchups:
+            print(f"{ComponentIdentifier} is a { matchups[ComponentIdentifier]}!")
+        else:
+            print("{} is a UNKNOWN type".format(TypeComponent))
+
+        if ComponentIdentifier == "C":
+            componentname = "C{}_{}".format(Comment.replace("F", ""), FormFactor)
+        
+        elif ComponentIdentifier == "D":
+            componentname = Comment
+
+        elif ComponentIdentifier == "IC":
+            componentname = "{}_{}".format(Comment, FormFactor)
+        
+        elif ComponentIdentifier == "K":
+            componentname = "K_K_K_K_K_K_K_K_K--{}".format(Comment)
+
+        elif ComponentIdentifier == "R":
+            componentname = "R{}_{}".format(Comment, FormFactor)
+        
+        elif ComponentIdentifier == "T":
+            componentname = "{}{}".format(Comment, FormFactor)
+        
+        elif ComponentIdentifier == "Z":
+            componentname = "Z_Z_Z_Z_Z_Z_Z_Z_Z--{}".format(Comment)
+    
+
+        return componentname
+
+#-------------------------------SeconderyFunctions--------------------
+#-------------------------------TertiaryFunctions---------------------
+
+def txtToArray_BOILERPLATE(inputarray):
+    ReturnArray = []
+
+    FRead = inputarray.replace("\n", "|").replace("\r", "|")                                      #Replace every newline with a "|" to be split there
     array = FRead.split("|")                                                                    #Splits with every new line
 
     for i in array:                                                                             #used to strip the trailing whitespaces and sorts them to item level
@@ -78,28 +162,9 @@ def txtToArray(textfilePath, mode):
 
     while [] in ReturnArray:                                                                    #remove unneeded additions to array
         ReturnArray.remove([])
-
-    if mode == "DE":
-        for i in ReturnArray[1:]:
-            hold = i[-1]
-            i.remove(hold)
-            holdnew = re.split(r"[0-9]\.[0-9][0-9] ", hold, maxsplit=1)
-            print(holdnew)
-            print(hold)
     return ReturnArray
 
-def arrayToPandasDF(DataArray, mode):
-    headers = DataArray[0]
-    data = DataArray[1:]
-
-    if mode == "DE":
-        headers = ["Designator", "Footprint", "Mid X", "Mid Y", "Ref X", "Ref Y", "Pad X", "Pad Y", "TB", "Rotation", "Comment"]
-
-    DF = pd.DataFrame(data, columns = headers)
-    return DF
-
-
-#-------------------------------SeconderyFunctions--------------------
+#-------------------------------TertiaryFunctions---------------------
 #-------------------------------__Main__------------------------------
 if __name__ == "__main__":
     loggingSetup()                                                                              #Set up all logging stuff away from the main code for readability
