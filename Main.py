@@ -40,13 +40,14 @@ def main():
         DataFrame.to_excel(r'test.xlsx', index = False)
     DataFrame = convertUnits(DataFrame, mode)
     print(DataFrame)
+    DataFrame = strippingDF(DataFrame)
     if mode == "DE":
         for i in range(0, len(DataFrame.index)):
             namej = createComponentName(DataFrame.iloc[i, 0], DataFrame.iloc[i,1].strip(), DataFrame.iloc[i, 10].strip(), mode)
             print(namej)
             DataFrame.iloc[i, 10] = namej
     print(DataFrame)
-    exportFile("Source\PickPlaceforBasismodule.txt", DataFrame, FirstPandasDF, mode)
+    DataFrame.to_csv("Exports/data.cvs", index=False)
     
     return
 
@@ -67,24 +68,11 @@ def selectMode():
 
     return inputMode
 
-def exportFile(SourceFile, DF, First, mode):
-    fileVar = open(SourceFile, "r").read()
-    print(fileVar)
-    if mode == "DE":
-        for i in range(0, len(DF.index)):
-            re.sub(First.iloc[i,2], DF.iloc[i,2], fileVar)
-            re.sub(First.iloc[i,3], DF.iloc[i,3], fileVar)
-            re.sub(First.iloc[i,4], DF.iloc[i,4], fileVar)
-            re.sub(First.iloc[i,7], DF.iloc[i,7], fileVar)
-            re.sub(First.iloc[i,5], DF.iloc[i,5], fileVar)
-            re.sub(First.iloc[i,6], DF.iloc[i,6], fileVar)
-
-            re.sub("".format(First.iloc[i,10]), "".format(DF.iloc[i,10]), fileVar)
-    print(fileVar)
-    print(type(fileVar))
-    return
-
-
+def strippingDF(DF):
+    for i in range(0, len(DF.index)):
+        for j in range(0, len(DF.columns)):
+            DF.iloc[i,j].strip()
+    return DF
 
 def convertUnits(DF, mode):
     if mode == "DE":
@@ -116,7 +104,7 @@ def txtToArray(textfilePath, mode):
         for i in ReturnArray[1:]:
             hold = i[-1]
             i.remove(hold)
-            holdnew = re.split(r"([0-9].00 )", hold, maxsplit=1)
+            holdnew = re.split(r"([0-9].00)", hold, maxsplit=1)
             holdnew[1] = holdnew[0] + holdnew[1]
             del holdnew[0]
             #print(holdnew)
