@@ -27,5 +27,10 @@
 # print(emptyarray)
 
 
-list = [[1], [2], [3], [4]]
-print(list[1:])
+# list = [[1], [2], [3], [4]]
+# print(list[1:])
+
+import tkinter as tk
+
+window = tk.Tk()
+window.mainloop()

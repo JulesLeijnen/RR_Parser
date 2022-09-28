@@ -1,7 +1,9 @@
 from copy import deepcopy
 import re
 import logging
+from turtle import color
 import pandas as pd
+import tkinter as tk
 
 #TODO:
 #   Tkinter front
@@ -32,6 +34,7 @@ def loggingSetup(): #Setup needed logging settings
 #-------------------------------Main----------------------------------
 
 def main():
+    window = tkinter_SetupWindow()
     mode = selectMode()                                                                         #Selects what mode to use (most likely will be what manifacturer)
     DataArray = txtToArray("Source\PickPlaceforBasismodule.txt", mode)
     DataFrame = arrayToPandasDF(DataArray, mode)
@@ -67,6 +70,33 @@ def selectMode():
             print("Invalid input, try again")
 
     return inputMode
+
+def tkinter_SetupWindow():
+    main_window = tk.Tk()
+    main_window.title("Pick & Place - File converter")
+
+    modeframe = tk.Frame(width=50, height=50)
+    modeframe.grid(row=0, column=0, padx=5, pady=5)
+
+    importbutton = tk.Button(text="Import location")
+    importbutton.grid(row=1, column=0, padx=5, pady=5)
+    importentry = tk.Entry()
+    importentry.grid(row=1, column=1, padx=5, pady=5)
+
+    exportbutton = tk.Button(text="Export location")
+    exportbutton.grid(row=2, column=0, padx=5, pady=5)
+    exportentry = tk.Entry()
+    exportentry.grid(row=2, column=1, padx=5, pady=5)
+
+    gobutton = tk.Button(text="Go")
+    gobutton.grid(row=2, column=3)
+
+    DBmodebutton = tk.Button(text="DB-mode")
+    DBmodebutton.grid(row=1, column=3)
+
+    main_window.mainloop()
+    return
+
 
 def strippingDF(DF):
     for i in range(0, len(DF.index)):
