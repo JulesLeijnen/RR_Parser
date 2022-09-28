@@ -1,8 +1,6 @@
+from copy import deepcopy
 import re
 import logging
-from statistics import mode
-from tkinter.tix import Form
-from typing import Type
 import pandas as pd
 
 #TODO:
@@ -37,11 +35,18 @@ def main():
     mode = selectMode()                                                                         #Selects what mode to use (most likely will be what manifacturer)
     DataArray = txtToArray("Source\PickPlaceforBasismodule.txt", mode)
     DataFrame = arrayToPandasDF(DataArray, mode)
+    FirstPandasDF = deepcopy(DataFrame)
     if DEBUGMODE:
         DataFrame.to_excel(r'test.xlsx', index = False)
-    for i in range(0, len(DataFrame.index)):
-        namej = createComponentName(DataFrame.iloc[i, 0], DataFrame.iloc[i,1].strip(), DataFrame.iloc[i, 10].strip(), mode)
-        print(namej)
+    DataFrame = convertUnits(DataFrame, mode)
+    print(DataFrame)
+    if mode == "DE":
+        for i in range(0, len(DataFrame.index)):
+            namej = createComponentName(DataFrame.iloc[i, 0], DataFrame.iloc[i,1].strip(), DataFrame.iloc[i, 10].strip(), mode)
+            print(namej)
+            DataFrame.iloc[i, 10] = namej
+    print(DataFrame)
+    exportFile("Source\PickPlaceforBasismodule.txt", DataFrame, FirstPandasDF, mode)
     
     return
 
@@ -49,7 +54,8 @@ def main():
 #-------------------------------SeconderyFunctions--------------------
 
 def selectMode():
-    return "DE"
+    if DEBUGMODE:
+        return "DE"
     inputModeCorrect = False
     while not inputModeCorrect:
         inputMode = input("Select the mode you need (DE/AA/AB/AC/AD)").upper()
@@ -59,15 +65,48 @@ def selectMode():
         else:
             print("Invalid input, try again")
 
-    
-    
     return inputMode
 
-def fromMiltoMM(Mil):
-    return Mil/39.3700787
+def exportFile(SourceFile, DF, First, mode):
+    fileVar = open(SourceFile, "r").read()
+    print(fileVar)
+    if mode == "DE":
+        for i in range(0, len(DF.index)):
+            re.sub(First.iloc[i,2], DF.iloc[i,2], fileVar)
+            re.sub(First.iloc[i,3], DF.iloc[i,3], fileVar)
+            re.sub(First.iloc[i,4], DF.iloc[i,4], fileVar)
+            re.sub(First.iloc[i,7], DF.iloc[i,7], fileVar)
+            re.sub(First.iloc[i,5], DF.iloc[i,5], fileVar)
+            re.sub(First.iloc[i,6], DF.iloc[i,6], fileVar)
 
-def fromMMtoMil(MM):
-    return MM*39.3700787
+            re.sub("".format(First.iloc[i,10]), "".format(DF.iloc[i,10]), fileVar)
+    print(fileVar)
+    print(type(fileVar))
+    return
+
+
+
+def convertUnits(DF, mode):
+    if mode == "DE":
+        for i in range(0, len(DF.index)):
+            temphold2, temphold3, temphold4, temphold5, temphold6, temphold7 = DF.iloc[i, 2], DF.iloc[i, 3], DF.iloc[i, 4], DF.iloc[i, 5], DF.iloc[i, 6], DF.iloc[i, 7]
+            #print("{}\n{}\n{}\n\n".format(temphold2, temphold3, temphold4))
+            temphold2 = float(re.sub(r'[^0-9.-]+', '', temphold2))
+            temphold3 = float(re.sub(r'[^0-9.-]+', '', temphold3))
+            temphold4 = float(re.sub(r'[^0-9.-]+', '', temphold4))
+            temphold5 = float(re.sub(r'[^0-9.-]+', '', temphold5))
+            temphold6 = float(re.sub(r'[^0-9.-]+', '', temphold6))
+            temphold7 = float(re.sub(r'[^0-9.-]+', '', temphold7))
+            #print("{}\n{}\n{}\n\n".format(temphold2, temphold3, temphold4))
+            DF.iloc[i, 2] = "{:.5f}mm".format(round(fromMiltoMM(temphold2), 5))
+            DF.iloc[i, 3] = "{:.5f}mm".format(round(fromMiltoMM(temphold3), 5))
+            DF.iloc[i, 4] = "{:.5f}mm".format(round(fromMiltoMM(temphold4), 5))
+            DF.iloc[i, 5] = "{:.5f}mm".format(round(fromMiltoMM(temphold5), 5))
+            DF.iloc[i, 6] = "{:.5f}mm".format(round(fromMiltoMM(temphold6), 5))
+            DF.iloc[i, 7] = "{:.5f}mm".format(round(fromMiltoMM(temphold7), 5))
+    return DF
+
+
 
 def txtToArray(textfilePath, mode):
     f = open(textfilePath, "r")
@@ -163,6 +202,12 @@ def txtToArray_BOILERPLATE(inputarray):
     while [] in ReturnArray:                                                                    #remove unneeded additions to array
         ReturnArray.remove([])
     return ReturnArray
+
+def fromMiltoMM(Mil):
+    return Mil/39.3700787
+
+def fromMMtoMil(MM):
+    return MM*39.3700787
 
 #-------------------------------TertiaryFunctions---------------------
 #-------------------------------__Main__------------------------------
