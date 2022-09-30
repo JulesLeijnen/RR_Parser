@@ -1,7 +1,6 @@
 from copy import deepcopy
 import re
 import logging
-from turtle import color
 import pandas as pd
 import tkinter as tk
 
@@ -34,17 +33,16 @@ def loggingSetup(): #Setup needed logging settings
 #-------------------------------Main----------------------------------
 
 def main():
-    window = tkinter_SetupWindow()
+    #window = tkinter_SetupWindow()
     mode = selectMode()                                                                         #Selects what mode to use (most likely will be what manifacturer)
-    DataArray = txtToArray("Source\PickPlaceforBasismodule.txt", mode)
+    DataArray = txtToArray("Source\DE_36_18v_9NL_24VDC_398x23_Rev005_Partlist_mil.txt", mode)
     DataFrame = arrayToPandasDF(DataArray, mode)
-    FirstPandasDF = deepcopy(DataFrame)
     if DEBUGMODE:
         DataFrame.to_excel(r'test.xlsx', index = False)
     DataFrame = convertUnits(DataFrame, mode)
     print(DataFrame)
     DataFrame = strippingDF(DataFrame)
-    if mode == "DE":
+    if mode == "F1":
         for i in range(0, len(DataFrame.index)):
             namej = createComponentName(DataFrame.iloc[i, 0], DataFrame.iloc[i,1].strip(), DataFrame.iloc[i, 10].strip(), mode)
             print(namej)
@@ -64,7 +62,7 @@ def selectMode():
     while not inputModeCorrect:
         inputMode = input("Select the mode you need (DE/AA/AB/AC/AD)").upper()
         print("You have selected: '{}'".format(inputMode))
-        if inputMode in ["DE"]:
+        if inputMode in ["F1"]:
             inputModeCorrect = True
         else:
             print("Invalid input, try again")
@@ -107,21 +105,31 @@ def strippingDF(DF):
 def convertUnits(DF, mode):
     if mode == "DE":
         for i in range(0, len(DF.index)):
+            temphold = DF.iloc[i,4]
+            temphold = re.sub(r"[()]", "", temphold)
+            newtemp = re.split(" ", temphold)
+            print(newtemp)
+            DF.iloc[i,4] = "({:.5f} {:.5f})".format(round(fromMiltoMM(float(newtemp[0])), 5), round(fromMiltoMM(float(newtemp[1])), 5))
+    
+    
+    if mode == "F1":
+        for i in range(0, len(DF.index)):
             temphold2, temphold3, temphold4, temphold5, temphold6, temphold7 = DF.iloc[i, 2], DF.iloc[i, 3], DF.iloc[i, 4], DF.iloc[i, 5], DF.iloc[i, 6], DF.iloc[i, 7]
-            #print("{}\n{}\n{}\n\n".format(temphold2, temphold3, temphold4))
-            temphold2 = float(re.sub(r'[^0-9.-]+', '', temphold2))
-            temphold3 = float(re.sub(r'[^0-9.-]+', '', temphold3))
-            temphold4 = float(re.sub(r'[^0-9.-]+', '', temphold4))
-            temphold5 = float(re.sub(r'[^0-9.-]+', '', temphold5))
-            temphold6 = float(re.sub(r'[^0-9.-]+', '', temphold6))
-            temphold7 = float(re.sub(r'[^0-9.-]+', '', temphold7))
-            #print("{}\n{}\n{}\n\n".format(temphold2, temphold3, temphold4))
-            DF.iloc[i, 2] = "{:.5f}mm".format(round(fromMiltoMM(temphold2), 5))
-            DF.iloc[i, 3] = "{:.5f}mm".format(round(fromMiltoMM(temphold3), 5))
-            DF.iloc[i, 4] = "{:.5f}mm".format(round(fromMiltoMM(temphold4), 5))
-            DF.iloc[i, 5] = "{:.5f}mm".format(round(fromMiltoMM(temphold5), 5))
-            DF.iloc[i, 6] = "{:.5f}mm".format(round(fromMiltoMM(temphold6), 5))
-            DF.iloc[i, 7] = "{:.5f}mm".format(round(fromMiltoMM(temphold7), 5))
+            if not re.search("mm\Z", temphold2):
+                #print("{}\n{}\n{}\n\n".format(temphold2, temphold3, temphold4))
+                temphold2 = float(re.sub(r'[^0-9.-]+', '', temphold2))
+                temphold3 = float(re.sub(r'[^0-9.-]+', '', temphold3))
+                temphold4 = float(re.sub(r'[^0-9.-]+', '', temphold4))
+                temphold5 = float(re.sub(r'[^0-9.-]+', '', temphold5))
+                temphold6 = float(re.sub(r'[^0-9.-]+', '', temphold6))
+                temphold7 = float(re.sub(r'[^0-9.-]+', '', temphold7))
+                #print("{}\n{}\n{}\n\n".format(temphold2, temphold3, temphold4))
+                DF.iloc[i, 2] = "{:.5f}mm".format(round(fromMiltoMM(temphold2), 5))
+                DF.iloc[i, 3] = "{:.5f}mm".format(round(fromMiltoMM(temphold3), 5))
+                DF.iloc[i, 4] = "{:.5f}mm".format(round(fromMiltoMM(temphold4), 5))
+                DF.iloc[i, 5] = "{:.5f}mm".format(round(fromMiltoMM(temphold5), 5))
+                DF.iloc[i, 6] = "{:.5f}mm".format(round(fromMiltoMM(temphold6), 5))
+                DF.iloc[i, 7] = "{:.5f}mm".format(round(fromMiltoMM(temphold7), 5))
     return DF
 
 
@@ -131,6 +139,23 @@ def txtToArray(textfilePath, mode):
     ReturnArray = txtToArray_BOILERPLATE(f.read())
 
     if mode == "DE":
+        ReturnArray = ReturnArray[3:]
+        for i in ReturnArray:
+            hold = i[2]
+            holdnew = re.split(r"_DE", hold)
+            #print(holdnew)
+            i[2] = holdnew[0].strip()
+            if len(holdnew) == 2:
+                i.append(i[4])
+                i[4] = i[3]
+                i[3] = "_DE"
+            if i[2] == "":
+                lasthold = i[1].rsplit(" ", 1)
+                print(lasthold)
+                i[1] = lasthold[0]
+                i[2] = lasthold[1]
+
+    if mode == "F1":
         for i in ReturnArray[1:]:
             hold = i[-1]
             i.remove(hold)
@@ -147,19 +172,23 @@ def txtToArray(textfilePath, mode):
 
 
 def arrayToPandasDF(DataArray, mode):
-    headers = DataArray[0]
     data = DataArray[1:]
 
-    if mode == "DE":
+    if mode == "F1":
         headers = ["Designator", "Footprint", "Mid X", "Mid Y", "Ref X", "Ref Y", "Pad X", "Pad Y", "TB", "Rotation", "Comment"]
 
-    DF = pd.DataFrame(data, columns = headers)
+    if mode == "DE":
+        #TODO: ADD EXEPTION FOR IF IT IS MM
+        headers = ["Part", "Value", "Package", "Library", "Position (mil)", "Orientation"]
+        pass
+
+    DF = pd.DataFrame(data, columns= headers)
     return DF
 
 def createComponentName(TypeComponent, FormFactor, Comment, Mode):
     componentname = "UNKNOWN_ERROR_CHECK-PROGRAM"
 
-    if Mode == "DE":
+    if Mode == "F1":
         ComponentIdentifier = (re.sub(r"[^a-zA-Z]", "", TypeComponent)).upper()
 
         matchups = {"C": "Capacitor",
