@@ -33,21 +33,26 @@ def loggingSetup(): #Setup needed logging settings
 #-------------------------------Main----------------------------------
 
 def main():
-    #window = tkinter_SetupWindow()
+    window = tkinter_SetupWindow()
     mode = selectMode()                                                                         #Selects what mode to use (most likely will be what manifacturer)
     DataArray = txtToArray("Source\DE_36_18v_9NL_24VDC_398x23_Rev005_Partlist_mil.txt", mode)
     DataFrame = arrayToPandasDF(DataArray, mode)
     if DEBUGMODE:
         DataFrame.to_excel(r'test.xlsx', index = False)
     DataFrame = convertUnits(DataFrame, mode)
-    print(DataFrame)
+    #print(DataFrame)
     DataFrame = strippingDF(DataFrame)
+    if mode == "DE":
+        for i in range(0, len(DataFrame.index)):
+            namej = createComponentName(DataFrame.iloc[i,0], DataFrame.iloc[i,2], DataFrame.iloc[i,1], mode)
+            #print(namej)
+            DataFrame.iloc[i,1] = namej
     if mode == "F1":
         for i in range(0, len(DataFrame.index)):
             namej = createComponentName(DataFrame.iloc[i, 0], DataFrame.iloc[i,1].strip(), DataFrame.iloc[i, 10].strip(), mode)
-            print(namej)
+            #print(namej)
             DataFrame.iloc[i, 10] = namej
-    print(DataFrame)
+    #print(DataFrame)
     DataFrame.to_csv("Exports/data.cvs", index=False)
     
     return
@@ -108,7 +113,7 @@ def convertUnits(DF, mode):
             temphold = DF.iloc[i,4]
             temphold = re.sub(r"[()]", "", temphold)
             newtemp = re.split(" ", temphold)
-            print(newtemp)
+            #print(newtemp)
             DF.iloc[i,4] = "({:.5f} {:.5f})".format(round(fromMiltoMM(float(newtemp[0])), 5), round(fromMiltoMM(float(newtemp[1])), 5))
     
     
@@ -151,7 +156,7 @@ def txtToArray(textfilePath, mode):
                 i[3] = "_DE"
             if i[2] == "":
                 lasthold = i[1].rsplit(" ", 1)
-                print(lasthold)
+                #print(lasthold)
                 i[1] = lasthold[0]
                 i[2] = lasthold[1]
 
@@ -178,30 +183,48 @@ def arrayToPandasDF(DataArray, mode):
         headers = ["Designator", "Footprint", "Mid X", "Mid Y", "Ref X", "Ref Y", "Pad X", "Pad Y", "TB", "Rotation", "Comment"]
 
     if mode == "DE":
-        #TODO: ADD EXEPTION FOR IF IT IS MM
-        headers = ["Part", "Value", "Package", "Library", "Position (mil)", "Orientation"]
-        pass
+        if DataArray[0][4] == "Position (mil)":
+            headers = ["Part", "Value", "Package", "Library", "Position (mil)", "Orientation"]
+        elif DataArray[0][4] == "Position (mm)":
+            headers = ["Part", "Value", "Package", "Library", "Position (mm)", "Orientation"]
+        else:
+            print("Fatal error: DataArray 0 4 = {}".format(DataArray[0][4]))
 
     DF = pd.DataFrame(data, columns= headers)
     return DF
 
 def createComponentName(TypeComponent, FormFactor, Comment, Mode):
     componentname = "UNKNOWN_ERROR_CHECK-PROGRAM"
+    if Mode == "DE":
+        ComponentIdentifier = (re.sub(r"[^a-zA-Z]", "", TypeComponent)).upper()
+
+        if ComponentIdentifier == "R":
+            newcommentP1 = re.sub(r"[Rr]", "E", Comment)
+            componentname = "R{}".format(newcommentP1)
+            #print(componentname)
+            #TODO: Maybe exception for DNA parts?
+        
+        elif ComponentIdentifier == "C":
+            componentname = "C{}".format(Comment.replace("F", ""))
+            #print(componentname)
+        else:
+            componentname = Comment
+        return componentname
 
     if Mode == "F1":
         ComponentIdentifier = (re.sub(r"[^a-zA-Z]", "", TypeComponent)).upper()
 
-        matchups = {"C": "Capacitor",
-                    "D": "Diode",
-                    "IC": "IC",
-                    "R": "Resistor",
-                    "T": "Transistor",
-                    "REL": "Relay",
-                    "K": "Relay"}
-        if ComponentIdentifier in matchups:
-            print(f"{ComponentIdentifier} is a { matchups[ComponentIdentifier]}!")
-        else:
-            print("{} is a UNKNOWN type".format(TypeComponent))
+        # matchups = {"C": "Capacitor",
+        #             "D": "Diode",
+        #             "IC": "IC",
+        #             "R": "Resistor",
+        #             "T": "Transistor",
+        #             "REL": "Relay",
+        #             "K": "Relay"}
+        # if ComponentIdentifier in matchups:
+        #     print(f"{ComponentIdentifier} is a { matchups[ComponentIdentifier]}!")
+        # else:
+        #     print("{} is a UNKNOWN type".format(TypeComponent))
 
         if ComponentIdentifier == "C":
             componentname = "C{}_{}".format(Comment.replace("F", ""), FormFactor)
