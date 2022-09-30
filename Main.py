@@ -183,12 +183,7 @@ def arrayToPandasDF(DataArray, mode):
         headers = ["Designator", "Footprint", "Mid X", "Mid Y", "Ref X", "Ref Y", "Pad X", "Pad Y", "TB", "Rotation", "Comment"]
 
     if mode == "DE":
-        if DataArray[0][4] == "Position (mil)":
-            headers = ["Part", "Value", "Package", "Library", "Position (mil)", "Orientation"]
-        elif DataArray[0][4] == "Position (mm)":
             headers = ["Part", "Value", "Package", "Library", "Position (mm)", "Orientation"]
-        else:
-            print("Fatal error: DataArray 0 4 = {}".format(DataArray[0][4]))
 
     DF = pd.DataFrame(data, columns= headers)
     return DF
