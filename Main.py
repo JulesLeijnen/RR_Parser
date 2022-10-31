@@ -1,8 +1,10 @@
+from cgitb import text
 from copy import deepcopy
 import re
 import logging
 import pandas as pd
 import tkinter as tk
+from tkinter import filedialog as FileDialog
 
 #TODO:
 #   Tkinter front
@@ -33,6 +35,7 @@ def loggingSetup(): #Setup needed logging settings
 #-------------------------------Main----------------------------------
 
 def main():
+    global mode
     window = tkinter_SetupWindow()
     mode = selectMode()                                                                         #Selects what mode to use (most likely will be what manifacturer)
     DataArray = txtToArray("Source\DE_36_18v_9NL_24VDC_398x23_Rev005_Partlist_mil.txt", mode)
@@ -75,27 +78,40 @@ def selectMode():
     return inputMode
 
 def tkinter_SetupWindow():
+    global importentry, exportentry, deviderlabel
     main_window = tk.Tk()
     main_window.title("Pick & Place - File converter")
 
     modeframe = tk.Frame(width=50, height=50)
-    modeframe.grid(row=0, column=0, padx=5, pady=5)
+    modeframe.grid(row=0, column=0, padx=5, pady=5, columnspan=4)
 
-    importbutton = tk.Button(text="Import location")
-    importbutton.grid(row=1, column=0, padx=5, pady=5)
+    importbutton = tk.Button(text="Import location", command=import_file_CALLBACK)
+    importbutton.grid(row=2, column=0, padx=5, pady=5)
     importentry = tk.Entry()
-    importentry.grid(row=1, column=1, padx=5, pady=5)
+    importentry.grid(row=2, column=1, padx=5, pady=5)
 
-    exportbutton = tk.Button(text="Export location")
-    exportbutton.grid(row=2, column=0, padx=5, pady=5)
+    exportbutton = tk.Button(text="Export location", command=export_file_CALLBACK)
+    exportbutton.grid(row=3, column=0, padx=5, pady=5)
     exportentry = tk.Entry()
-    exportentry.grid(row=2, column=1, padx=5, pady=5)
+    exportentry.grid(row=3, column=1, padx=5, pady=5)
 
     gobutton = tk.Button(text="Go")
-    gobutton.grid(row=2, column=3)
+    gobutton.grid(row=3, column=3)
 
-    DBmodebutton = tk.Button(text="DB-mode")
-    DBmodebutton.grid(row=1, column=3)
+    DBmodebutton = tk.Button(text="DB-mode", command=DEmode_CALLBACK)
+    DBmodebutton.grid(row=2, column=3)
+
+    DEmodeButton = tk.Button(text="Dutch Electro")
+    DEmodeButton.grid(row=0, column=0)
+
+    Fab2Button = tk.Button(text="Fab2")
+    Fab2Button.grid(row=0, column=1)
+
+    Fab3Button = tk.Button(text="Fab3")
+    Fab3Button.grid(row=0, column=2)
+
+    deviderlabel = tk.Label(text="------------------------------------------------------------")
+    deviderlabel.grid(row=1, column=0, columnspan=5)
 
     main_window.mainloop()
     return
@@ -273,6 +289,22 @@ def fromMiltoMM(Mil):
 
 def fromMMtoMil(MM):
     return MM*39.3700787
+
+def import_file_CALLBACK():
+    global importentry
+    filename = FileDialog.askopenfilename(title='Select import file', initialdir='/')
+    importentry.insert(0, filename)
+
+def export_file_CALLBACK():
+    global exportentry
+    foldername = FileDialog.askdirectory(title="Select output location", initialdir='/')
+    exportentry.insert(0, foldername)
+
+def DEmode_CALLBACK():
+    global deviderlabel
+    DEBUGMODE = True
+    print("asdfasd")
+    deviderlabel.config(text="------------------Debug-mode-updated------------------")
 
 #-------------------------------TertiaryFunctions---------------------
 #-------------------------------__Main__------------------------------

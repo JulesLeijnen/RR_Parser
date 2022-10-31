@@ -1,4 +1,4 @@
-Part,Value,Package,Library,Position (mil),Orientation
+Part,Value,Package,Library,Position (mm),Orientation
 C1,C1N_0805,0805,_DE,(79.39999 17.39999),R90
 C2,C1N_0805,0805,_DE,(318.60000 5.59999),R270
 CON1,CON_2P_POKE_2060_452,CON_2P_POKE_2060_452,_DE,(7.53301 18.39999),R270
