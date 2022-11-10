@@ -1,5 +1,3 @@
-from cgitb import text
-from copy import deepcopy
 import re
 import logging
 import pandas as pd
@@ -98,10 +96,10 @@ def tkinter_SetupWindow():
     gobutton = tk.Button(text="Go")
     gobutton.grid(row=3, column=3)
 
-    DBmodebutton = tk.Button(text="DB-mode", command=DEmode_CALLBACK)
+    DBmodebutton = tk.Button(text="DB-mode", command=DBmode_CALLBACK)
     DBmodebutton.grid(row=2, column=3)
 
-    DEmodeButton = tk.Button(text="Dutch Electro")
+    DEmodeButton = tk.Button(text="Dutch Electro", command=DEmode_CALLBACK)
     DEmodeButton.grid(row=0, column=0)
 
     Fab2Button = tk.Button(text="Fab2")
@@ -299,12 +297,16 @@ def export_file_CALLBACK():
     global exportentry
     foldername = FileDialog.askdirectory(title="Select output location", initialdir='/')
     exportentry.insert(0, foldername)
-
-def DEmode_CALLBACK():
+def DBmode_CALLBACK():
     global deviderlabel
     DEBUGMODE = True
-    print("asdfasd")
     deviderlabel.config(text="------------------Debug-mode-updated------------------")
+
+def DEmode_CALLBACK():
+    global mode, deviderlabel
+    mode = "DE"
+    deviderlabel.config(text="------------------Dutch-Electro-Selected------------------")
+
 
 #-------------------------------TertiaryFunctions---------------------
 #-------------------------------__Main__------------------------------
